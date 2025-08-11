@@ -1,0 +1,74 @@
+/*
+    Problem:
+    Check if a given string s is a palindrome or can become a palindrome
+    by deleting at most one character.
+
+    Definition:
+    A palindrome is a string that reads the same forward and backward.
+    Examples: "madam", "abba"
+
+    Approach:
+    - Use two pointers: one starting from the left (l) and one from the right (r).
+    - Compare characters at both ends.
+    - If mismatch is found, try skipping either the left or right character
+      and check if the resulting string is a palindrome.
+    - If no mismatches are found, the string is already a palindrome.
+
+    Time Complexity:
+    O(n) → Single pass + at most one additional O(n) palindrome check.
+    Space Complexity:
+    O(n) due to substr() creating new strings.
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool validPalindrome(string s) {
+        int l = 0, r = s.size() - 1; // Initialize two pointers
+
+        while (l < r) {
+            if (s[l] != s[r]) {
+                // If mismatch, try removing left char OR right char
+                return isPalindrome(s.substr(0, l) + s.substr(l + 1)) ||
+                       isPalindrome(s.substr(0, r) + s.substr(r + 1));
+            }
+            l++;
+            r--;
+        }
+        // No mismatches → already a palindrome
+        return true;
+    }
+
+private:
+    // Helper function to check if a string is a palindrome
+    bool isPalindrome(string s) {
+        int l = 0, r = s.length() - 1;
+        while (l < r) {
+            if (s[l] != s[r]) {
+                return false; // Mismatch → not palindrome
+            }
+            l++;
+            r--;
+        }
+        return true;
+    }
+};
+
+/*
+    Example Execution:
+    Input: "abca"
+    Step 1: 'a' == 'a' → move inward
+    Step 2: 'b' != 'c' → mismatch
+    Step 3: Try removing 'b' → "aca" → palindrome ✅
+    Step 4: Try removing 'c' → "aba" → palindrome ✅
+    Output: true
+*/
+
+int main() {
+    Solution sol;
+    string s = "abca";
+    cout << (sol.validPalindrome(s) ? "true" : "false");
+    return 0;
+}
